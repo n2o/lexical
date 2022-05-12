@@ -617,7 +617,7 @@ export class LexicalNode {
 
   static importJSON(
     // $FlowFixMe: TODO
-    serialzedNode: Object,
+    serializedNode: Object,
   ): LexicalNode {
     invariant(
       false,

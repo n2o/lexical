@@ -166,6 +166,10 @@ declare export class LexicalEditor {
   parseEditorState(
     maybeStringifiedEditorState: string | ParsedEditorState,
   ): EditorState;
+  unstable_parseEditorState<SerializedNode>(
+    maybeStringifiedEditorState: string | SerialzedEditorState<SerializedNode>,
+    updateFn?: () => void,
+  ): EditorState;
   update(updateFn: () => void, options?: EditorUpdateOptions): boolean;
   focus(callbackFn?: () => void): void;
   blur(): void;
@@ -291,6 +295,7 @@ export interface EditorState {
   isEmpty(): boolean;
   read<V>(callbackFn: () => V): V;
   toJSON(space?: string | number): JSONEditorState;
+  unstable_toJSON<SerializedNode>(): SerialzedEditorState<SerializedNode>;
   clone(
     selection?: RangeSelection | NodeSelection | GridSelection | null,
   ): EditorState;
@@ -630,6 +635,9 @@ declare export class TextNode extends LexicalNode {
   toggleDirectionless(): this;
   toggleUnmergeable(): this;
   setMode(type: TextModeType): this;
+  setDetail(detail: number): this;
+  getDetail(): number;
+  getMode(): TextModeType;
   setTextContent(text: string): TextNode;
   select(_anchorOffset?: number, _focusOffset?: number): RangeSelection;
   spliceText(
@@ -643,6 +651,8 @@ declare export class TextNode extends LexicalNode {
   splitText(...splitOffsets: Array<number>): Array<TextNode>;
   mergeWithSibling(target: TextNode): TextNode;
   isTextEntity(): boolean;
+  static importJSON(serializedTextNode: SerializedTextNode): TextNode;
+  exportJSON(): SerializedTextNode;
 }
 declare export function $createTextNode(text?: string): TextNode;
 declare export function $isTextNode(
@@ -660,6 +670,10 @@ declare export class LineBreakNode extends LexicalNode {
   getTextContent(): '\n';
   createDOM(): HTMLElement;
   updateDOM(): false;
+  static importJSON(
+    serializedLineBreakNode: SerializedLineBreakNode,
+  ): LineBreakNode;
+  exportJSON(): SerializedLineBreakNode;
 }
 declare export function $createLineBreakNode(): LineBreakNode;
 declare export function $isLineBreakNode(
@@ -700,6 +714,7 @@ declare export class ElementNode extends LexicalNode {
   __dir: 'ltr' | 'rtl' | null;
   constructor(key?: NodeKey): void;
   getFormat(): number;
+  getFormatType(): 'left' | 'center' | 'right' | 'justify';
   getIndent(): number;
   getChildren(): Array<LexicalNode>;
   getChildrenKeys(): Array<NodeKey>;
@@ -748,6 +763,7 @@ declare export class ElementNode extends LexicalNode {
     deleteCount: number,
     nodesToInsert: Array<LexicalNode>,
   ): ElementNode;
+  exportJSON<SerializedNode>(): SerializedElementNode<SerializedNode>;
 }
 declare export function $isElementNode(
   node: ?LexicalNode,
@@ -778,6 +794,10 @@ declare export class ParagraphNode extends ElementNode {
   updateDOM(prevNode: ParagraphNode, dom: HTMLElement): boolean;
   insertNewAfter(): ParagraphNode;
   collapseAtStart(): boolean;
+  static importJSON<SerializedNode>(
+    serializedParagraphNode: SerializedParagraphNode<SerializedNode>,
+  ): ParagraphNode;
+  exportJSON<SerializedNode>(): SerializedParagraphNode<SerializedNode>;
 }
 declare export function $createParagraphNode(): ParagraphNode;
 declare export function $isParagraphNode(
@@ -842,3 +862,40 @@ export type EventHandler = (
  * LexicalVersion
  */
 declare export var VERSION: string;
+
+// Serialization
+
+export interface SerializedTextNode {
+  detail: number;
+  format: number;
+  mode: TextModeType;
+  style: string;
+  text: string;
+  +type: string;
+}
+
+export interface SerializedElementNode<SerializedNode> {
+  children: Array<SerializedNode>;
+  direction: 'ltr' | 'rtl' | null;
+  format: 'left' | 'center' | 'right' | 'justify';
+  indent: number;
+  +type: string;
+}
+
+export interface SerializedParagraphNode<SerializedNode>
+  extends SerializedElementNode<SerializedNode> {
+  type: 'paragraph';
+}
+
+export interface SerializedLineBreakNode {
+  type: 'linebreak';
+}
+
+export interface SerializedRootNode<SerializedNode>
+  extends SerializedElementNode<SerializedNode> {
+  type: 'root';
+}
+
+export interface SerialzedEditorState<SerializedNode> {
+  root: SerializedRootNode<SerializedNode>;
+}

@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @flow strict
+
  */
 
 import type {ElementNode, LexicalEditor, LexicalNode, RootNode} from 'lexical';
@@ -17,6 +17,7 @@ import {
   TextNode,
 } from 'lexical';
 import invariant from 'shared/invariant';
+import { Class } from 'utility-types';
 
 export type TextNodeWithOffset = {
   node: TextNode,
@@ -235,7 +236,7 @@ export function registerLexicalTextEntity<N: TextNode>(
   targetNode: Class<N>,
   createNode: (textNode: TextNode) => N,
 ): Array<() => void> {
-  const isTargetNode = (node: ?LexicalNode): node is FindAndReplace => {
+  const isTargetNode = (node: LexicalNode | null | undefined): node is N => {
     return node instanceof targetNode;
   };
 

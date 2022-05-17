@@ -1,10 +1,21 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ *
+ */
+
 import type {
   EditorState,
   LexicalEditor,
   NodeKey,
   NodeMap,
   RangeSelection,
+  RootNode,
 } from 'lexical';
+
 import {
   $createRangeSelection,
   $getNodeByKey,
@@ -12,6 +23,7 @@ import {
   $isTextNode,
 } from 'lexical';
 import invariant from 'shared/invariant';
+
 type OffsetElementNode = {
   child: null | OffsetNode;
   end: number;
@@ -44,6 +56,7 @@ type OffsetInlineNode = {
 };
 type OffsetNode = OffsetElementNode | OffsetTextNode | OffsetInlineNode;
 type OffsetMap = Map<NodeKey, OffsetNode>;
+
 export class OffsetView {
   _offsetMap: OffsetMap;
   _firstNode: null | OffsetNode;
@@ -52,8 +65,8 @@ export class OffsetView {
   constructor(
     offsetMap: OffsetMap,
     firstNode: null | OffsetNode,
-    blockOffsetSize: number = 1,
-  ): void {
+    blockOffsetSize = 1,
+  ) {
     this._offsetMap = offsetMap;
     this._firstNode = firstNode;
     this._blockOffsetSize = blockOffsetSize;
@@ -125,8 +138,8 @@ export class OffsetView {
 
     let startOffset = 0;
     let endOffset = 0;
-    let startType = 'element';
-    let endType = 'element';
+    let startType: 'element' | 'text' = 'element';
+    let endType: 'element' | 'text' = 'element';
 
     if (startOffsetNode.type === 'text') {
       startOffset = start - startOffsetNode.start;
@@ -169,6 +182,7 @@ export class OffsetView {
 
     selection.anchor.set(startKey, startOffset, startType);
     selection.focus.set(endKey, endOffset, endType);
+
     return selection;
   }
 
@@ -374,15 +388,26 @@ function $searchForNodeWithOffset(
   return null;
 }
 
-function $createInternalOffsetNode<N>(
-  child: null | OffsetNode,
+function $createInternalOffsetNode<
+  TChild extends OffsetNode,
+  TParent extends OffsetElementNode = OffsetElementNode,
+>(
+  child: null | TChild,
   type: 'element' | 'text' | 'inline',
   start: number,
   end: number,
   key: NodeKey,
-  parent: null | OffsetElementNode,
-): N {
-  // $FlowFixMe: not sure why Flow doesn't like this?
+  parent: null | TParent,
+): {
+  child: null | TChild;
+  type: 'element' | 'text' | 'inline';
+  start: number;
+  end: number;
+  key: NodeKey;
+  parent: null | TParent;
+  next: null;
+  prev: null;
+} {
   return {
     child,
     end,
@@ -436,13 +461,13 @@ function $createOffsetNode(
     }
 
     const offsetNode = $createInternalOffsetNode<OffsetElementNode>(
-      child,
+      child as OffsetElementNode,
       'element',
       start,
       start,
       key,
       parent,
-    );
+    ) as OffsetElementNode;
 
     if (child !== null) {
       child.parent = offsetNode;
@@ -455,20 +480,19 @@ function $createOffsetNode(
   }
 
   state.prevIsBlock = false;
+
   const isText = $isTextNode(node);
-  // $FlowFixMe: isText means __text is available
   const length = isText ? node.__text.length : 1;
   const end = (state.offset += length);
-  const offsetNode: OffsetTextNode | OffsetInlineNode =
-    $createInternalOffsetNode<OffsetTextNode | OffsetInlineNode>(
-      null,
-      isText ? 'text' : 'inline',
-      start,
-      end,
-      key,
-      parent,
-    );
+
+  const offsetNode = $createInternalOffsetNode<
+    OffsetTextNode | OffsetInlineNode
+  >(null, isText ? 'text' : 'inline', start, end, key, parent) as
+    | OffsetTextNode
+    | OffsetInlineNode;
+
   offsetMap.set(key, offsetNode);
+
   return offsetNode;
 }
 
@@ -485,10 +509,12 @@ function $createOffsetChild(
 ): OffsetNode | null {
   let firstNode = null;
   let currentNode = null;
+
   const childrenLength = children.length;
 
   for (let i = 0; i < childrenLength; i++) {
     const childKey = children[i];
+
     const offsetNode = $createOffsetNode(
       state,
       childKey,
@@ -513,19 +539,21 @@ function $createOffsetChild(
 
 export function $createOffsetView(
   editor: LexicalEditor,
-  blockOffsetSize: number = 1,
+  blockOffsetSize = 1,
   editorState?: EditorState,
 ): OffsetView {
   const targetEditorState =
     editorState || editor._pendingEditorState || editor._editorState;
   const nodeMap = targetEditorState._nodeMap;
-  // $FlowFixMe: root is always in the Map
-  const root = nodeMap.get('root') as any as RootNode;
+
+  const root = nodeMap.get('root') as RootNode;
+
   const offsetMap = new Map();
   const state = {
     offset: 0,
     prevIsBlock: false,
   };
+
   const node = $createOffsetChild(
     state,
     root.__children,
@@ -534,5 +562,6 @@ export function $createOffsetView(
     offsetMap,
     blockOffsetSize,
   );
+
   return new OffsetView(offsetMap, node, blockOffsetSize);
 }

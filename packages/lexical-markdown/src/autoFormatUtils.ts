@@ -13,9 +13,11 @@ import type {
   NodeSelection,
   RangeSelection,
 } from 'lexical';
+
 import {$isCodeNode} from '@lexical/code';
 import {$isListItemNode} from '@lexical/list';
 import {$getSelection, $isRangeSelection, $isTextNode} from 'lexical';
+
 import {
   getAllMarkdownCriteria,
   getAllMarkdownCriteriaForTextNodes,

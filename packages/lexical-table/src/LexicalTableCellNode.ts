@@ -5,7 +5,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @flow strict
+
  */
 import type {
   DOMConversionMap,
@@ -66,7 +66,7 @@ export class TableCellNode extends GridCellNode {
 
   constructor(
     headerState?: TableCellHeaderState = TableCellHeaderStates.NO_STATUS,
-    colSpan?: number = 1,
+    colSpan? = 1,
     width?: ?number,
     key?: NodeKey,
   ): void {
@@ -214,12 +214,14 @@ export function convertTableCellNodeElement(
 
 export function $createTableCellNode(
   headerState: TableCellHeaderState,
-  colSpan?: number = 1,
+  colSpan? = 1,
   width?: ?number,
 ): TableCellNode {
   return new TableCellNode(headerState, colSpan, width);
 }
 
-export function $isTableCellNode(node: ?LexicalNode): node is FindAndReplace {
+export function $isTableCellNode(
+  node: LexicalNode | null | undefined,
+): node is FindAndReplace {
   return node instanceof TableCellNode;
 }

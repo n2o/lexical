@@ -1,4 +1,3 @@
-import type {TextNode} from '../../lexical/flow/Lexical';
 import type {ScanningContext} from './utils';
 import type {
   DecoratorNode,
@@ -7,7 +6,9 @@ import type {
   LexicalNode,
   ParagraphNode,
   RootNode,
+  TextNode,
 } from 'lexical';
+
 import {
   $createParagraphNode,
   $createTextNode,
@@ -17,6 +18,7 @@ import {
   $isTextNode,
 } from 'lexical';
 import invariant from 'shared/invariant';
+
 import {
   getAllMarkdownCriteriaForParagraphs,
   getAllMarkdownCriteriaForTextNodes,
@@ -28,6 +30,7 @@ import {
   resetScanningContext,
   transformTextNodeForMarkdownCriteria,
 } from './utils';
+
 export function convertStringToLexical(
   text: string,
   editor: LexicalEditor,
@@ -133,7 +136,7 @@ function convertParagraphLevelMarkdown<T>(
   // Handle paragraph nodes below.
   if ($isParagraphNode(elementNode)) {
     const paragraphNode: ParagraphNode = elementNode;
-    const firstChild = paragraphNode.getFirstChild();
+    const firstChild = paragraphNode.getFirstChild<TextNode>();
     const firstChildIsTextNode = $isTextNode(firstChild);
 
     // Handle conversion to code block.
@@ -314,7 +317,7 @@ function convertMarkdownForTextCriteria<T>(
 function getLastTextNodeInElementNode(
   elementNode: ElementNode,
 ): null | TextNode {
-  const children: Array<LexicalNode> = elementNode.getChildren();
+  const children = elementNode.getChildren<Array<TextNode>>();
   const countOfChildren = children.length;
 
   for (let i = countOfChildren - 1; i >= 0; i--) {

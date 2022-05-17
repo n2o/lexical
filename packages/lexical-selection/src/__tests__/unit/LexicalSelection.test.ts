@@ -54,9 +54,7 @@ import {
   setNativeSelectionWithPaths,
   undo,
 } from '../utils';
-// No idea why we suddenly need to do this, but it fixes the tests
-// with latest experimental React version.
-global.IS_REACT_ACT_ENVIRONMENT = true;
+
 jest.mock('shared/environment', () => {
   const originalModule = jest.requireActual('shared/environment');
   return {...originalModule, IS_FIREFOX: true};
@@ -919,6 +917,7 @@ describe('LexicalSelection tests', () => {
   ];
   suite.forEach((testUnit, i) => {
     const name = testUnit.name || 'Test case';
+
     test(name + ` (#${i + 1})`, async () => {
       await applySelectionInputs(testUnit.inputs, update, editor);
       // Validate HTML matches
@@ -929,6 +928,7 @@ describe('LexicalSelection tests', () => {
       assertSelection(rootElement, expectedSelection);
     });
   });
+
   test('getNodes resolves nested block nodes', async () => {
     await ReactTestUtils.act(async () => {
       await editor.update(() => {
@@ -1515,6 +1515,7 @@ describe('LexicalSelection tests', () => {
       });
     });
   });
+
   test('isBackward', async () => {
     await ReactTestUtils.act(async () => {
       await editor.update(() => {
@@ -1661,6 +1662,7 @@ describe('LexicalSelection tests', () => {
         '<p dir="ltr"><span data-lexical-text="true">Hello </span><strong data-lexical-text="true">awesome</strong></p><p dir="ltr"><span data-lexical-text="true"> world</span></p>',
       );
     });
+
     test('four text nodes at offset 0 on third node', async () => {
       const testEditor = createTestEditor();
       const element = document.createElement('div');
@@ -1695,6 +1697,7 @@ describe('LexicalSelection tests', () => {
     });
     it('adjust offset for inline elements text formatting', async () => {
       init();
+
       await editor.update(() => {
         const root = $getRoot();
         const text1 = $createTextNode('--');

@@ -173,7 +173,8 @@ const fillEditorWithComplexData = () => {
 };
 
 describe('Clipboard tests', () => {
-  initializeUnitTest((testEnv) => {
+  initializeUnit;
+  test((testEnv) => {
     test('Clone entire document', async () => {
       const {editor} = testEnv;
 

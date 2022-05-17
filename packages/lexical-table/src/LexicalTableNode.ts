@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @flow strict
+
  */
 
 import type {TableCellNode} from './LexicalTableCellNode';
@@ -47,7 +47,7 @@ export class TableNode extends GridNode {
     };
   }
 
-  constructor(key?: NodeKey): void {
+  constructor(key?: NodeKey) {
     super(key);
   }
 
@@ -210,6 +210,8 @@ export function $createTableNode(): TableNode {
   return new TableNode();
 }
 
-export function $isTableNode(node: ?LexicalNode): node is FindAndReplace {
+export function $isTableNode(
+  node: LexicalNode | null | undefined,
+): node is FindAndReplace {
   return node instanceof TableNode;
 }

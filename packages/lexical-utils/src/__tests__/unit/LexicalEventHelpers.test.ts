@@ -17,9 +17,7 @@ import {TestComposer} from 'lexical/src/__tests__/utils';
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import ReactTestUtils from 'react-dom/test-utils';
-// No idea why we suddenly need to do this, but it fixes the tests
-// with latest experimental React version.
-global.IS_REACT_ACT_ENVIRONMENT = true;
+
 jest.mock('shared/environment', () => {
   const originalModule = jest.requireActual('shared/environment');
   return {...originalModule, IS_FIREFOX: true};
@@ -288,6 +286,7 @@ describe('LexicalEventHelpers', () => {
       ];
       suite.forEach((testUnit, i) => {
         const name = testUnit.name || 'Test case';
+
         test(name + ` (#${i + 1})`, async () => {
           await applySelectionInputs(testUnit.inputs, update, editor);
           // Validate HTML matches
@@ -320,6 +319,7 @@ describe('LexicalEventHelpers', () => {
       ];
       suite.forEach((testUnit, i) => {
         const name = testUnit.name || 'Test case';
+
         test(name + ` (#${i + 1})`, async () => {
           await applySelectionInputs(testUnit.inputs, update, editor);
           // Validate HTML matches

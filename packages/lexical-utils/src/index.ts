@@ -4,17 +4,18 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @flow strict
+
  */
 
 import type {ElementNode, LexicalEditor, LexicalNode} from 'lexical';
 
 import {$getRoot, $isElementNode} from 'lexical';
 import invariant from 'shared/invariant';
+import {Class} from 'utility-types';
 
 export type DFSNode = $ReadOnly<{
-  depth: number,
-  node: LexicalNode,
+  depth: number;
+  node: LexicalNode;
 }>;
 
 export function addClassNamesToElement(
@@ -83,7 +84,7 @@ function $getDepth(node: LexicalNode): number {
   return depth;
 }
 
-export function $getNearestNodeOfType<T: LexicalNode>(
+export function $getNearestNodeOfType<T extends LexicalNode>(
   node: LexicalNode,
   klass: Class<T>,
 ): T | null {
@@ -116,12 +117,12 @@ export function $getNearestBlockElementAncestorOrThrow(
 
 export type DOMNodeToLexicalConversion = (element: Node) => LexicalNode;
 export type DOMNodeToLexicalConversionMap = {
-  [string]: DOMNodeToLexicalConversion,
+  [string]: DOMNodeToLexicalConversion;
 };
 
 export function $findMatchingParent(
   startingNode: LexicalNode,
-  findFn: (LexicalNode) => boolean,
+  findFn: (node: LexicalNode) => boolean,
 ): LexicalNode | null {
   let curr = startingNode;
 
@@ -144,17 +145,17 @@ export function mergeRegister(...func: Array<Func>): () => void {
   };
 }
 
-export function registerNestedElementResolver<N: ElementNode>(
+export function registerNestedElementResolver<N extends ElementNode>(
   editor: LexicalEditor,
   targetNode: Class<N>,
   cloneNode: (from: N) => N,
   handleOverlap: (from: N, to: N) => void,
 ): () => void {
-  const $isTargetNode = (node: ?LexicalNode): node is FindAndReplace => {
+  const $isTargetNode = (node: LexicalNode | null | undefined): node is N => {
     return node instanceof targetNode;
   };
 
-  const $findMatch = (node: N): {child: ElementNode, parent: N} | null => {
+  const $findMatch = (node: N): {child: ElementNode; parent: N} | null => {
     // First validate we don't have any children that are of the target,
     // as we need to handle them first.
     const children = node.getChildren();

@@ -12,11 +12,10 @@ import {
   initializeUnitTest,
 } from 'lexical/src/__tests__/utils';
 import {$dfs} from '../..';
-// No idea why we suddenly need to do this, but it fixes the tests
-// with latest experimental React version.
-global.IS_REACT_ACT_ENVIRONMENT = true;
+
 describe('LexicalNodeHelpers tests', () => {
-  initializeUnitTest((testEnv) => {
+  initializeUnit
+test((testEnv) => {
     /**
      *               R
      *        P1            P2
@@ -25,7 +24,8 @@ describe('LexicalNodeHelpers tests', () => {
      *
      *  DFS: R, P1, B1, T1, B2, T2, T3, P2, T4, T5, B3, T6
      */
-    test('DFS node order', async () => {
+    
+test('DFS node order', async () => {
       const editor: LexicalEditor = testEnv.editor;
       let expectedKeys: Array<NodeKey> = [];
       await editor.update((state: State) => {
@@ -106,7 +106,8 @@ describe('LexicalNodeHelpers tests', () => {
       editor.getEditorState().read(() => {
         const expectedNodes = expectedKeys.map(({depth, node: nodeKey}) => ({
           depth,
-          node: $getNodeByKey(nodeKey).getLatest(),
+          node: $getNodeByKey(nodeKey).getLa
+test(),
         }));
         const first = expectedNodes[0];
         const second = expectedNodes[1];
@@ -120,12 +121,15 @@ describe('LexicalNodeHelpers tests', () => {
         expect($dfs($getRoot())).toEqual(expectedNodes);
       });
     });
-    test('DFS triggers getLatest()', async () => {
+    
+test('DFS triggers getLa
+test()', async () => {
       const editor: LexicalEditor = testEnv.editor;
       let rootKey;
       let paragraphKey;
       let block1Key;
       let block2Key;
+
       await editor.update(() => {
         const root = $getRoot();
         const paragraph = $createParagraphNode();
@@ -138,6 +142,7 @@ describe('LexicalNodeHelpers tests', () => {
         root.append(paragraph);
         paragraph.append(block1, block2);
       });
+
       await editor.update(() => {
         const root = $getNodeByKey(rootKey);
         const paragraph = $getNodeByKey(paragraphKey);
@@ -148,23 +153,28 @@ describe('LexicalNodeHelpers tests', () => {
         expect($dfs(root)).toEqual([
           {
             depth: 0,
-            node: root.getLatest(),
+            node: root.getLa
+test(),
           },
           {
             depth: 1,
-            node: paragraph.getLatest(),
+            node: paragraph.getLa
+test(),
           },
           {
             depth: 2,
-            node: block1.getLatest(),
+            node: block1.getLa
+test(),
           },
           {
             depth: 3,
-            node: block3.getLatest(),
+            node: block3.getLa
+test(),
           },
           {
             depth: 2,
-            node: block2.getLatest(),
+            node: block2.getLa
+test(),
           },
         ]);
       });

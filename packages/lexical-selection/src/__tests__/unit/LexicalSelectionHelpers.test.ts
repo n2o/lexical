@@ -6,6 +6,7 @@
  *
  */
 import type {State} from 'lexical';
+
 import {$createLinkNode} from '@lexical/link';
 import {$createHeadingNode} from '@lexical/rich-text';
 import {$cloneContents} from '@lexical/selection';
@@ -22,10 +23,8 @@ import {
   $createTestExcludeFromCopyElementNode,
   createTestEditor,
 } from 'lexical/src/__tests__/utils';
+
 import {setAnchorPoint, setFocusPoint} from '../utils';
-// No idea why we suddenly need to do this, but it fixes the tests
-// with latest experimental React version.
-global.IS_REACT_ACT_ENVIRONMENT = true;
 
 function createParagraphWithNodes(editor, nodes) {
   const paragraph = $createParagraphNode();
@@ -205,6 +204,7 @@ describe('LexicalSelectionHelpers tests', () => {
         });
       });
     });
+
     test('Has correct text point after removal after merge', async () => {
       const editor = createTestEditor();
       const domElement = document.createElement('div');
@@ -274,6 +274,7 @@ describe('LexicalSelectionHelpers tests', () => {
         );
       });
     });
+
     test('Has correct text point after removal after merge (2)', async () => {
       const editor = createTestEditor();
       const domElement = document.createElement('div');
@@ -338,6 +339,7 @@ describe('LexicalSelectionHelpers tests', () => {
         );
       });
     });
+
     test('Has correct text point adjust to element point after removal of a single empty text node', async () => {
       const editor = createTestEditor();
       const domElement = document.createElement('div');
@@ -387,6 +389,7 @@ describe('LexicalSelectionHelpers tests', () => {
         );
       });
     });
+
     test('Has correct element point after removal of an empty text node in a group #1', async () => {
       const editor = createTestEditor();
       const domElement = document.createElement('div');
@@ -441,6 +444,7 @@ describe('LexicalSelectionHelpers tests', () => {
         );
       });
     });
+
     test('Has correct element point after removal of an empty text node in a group #2', async () => {
       const editor = createTestEditor();
       const domElement = document.createElement('div');
@@ -505,6 +509,7 @@ describe('LexicalSelectionHelpers tests', () => {
         );
       });
     });
+
     test('Has correct text point after removal of an empty text node in a group #3', async () => {
       const editor = createTestEditor();
       const domElement = document.createElement('div');
@@ -569,6 +574,7 @@ describe('LexicalSelectionHelpers tests', () => {
         );
       });
     });
+
     test('Can handle an element point on empty element', () => {
       const setupTestCase = (cb) => {
         const editor = createTestEditor();
@@ -689,6 +695,7 @@ describe('LexicalSelectionHelpers tests', () => {
         });
       });
     });
+
     test('Can handle a start element point', () => {
       const setupTestCase = (cb) => {
         const editor = createTestEditor();
@@ -828,6 +835,7 @@ describe('LexicalSelectionHelpers tests', () => {
         });
       });
     });
+
     test('Can handle an end element point', () => {
       const setupTestCase = (cb) => {
         const editor = createTestEditor();
@@ -968,6 +976,7 @@ describe('LexicalSelectionHelpers tests', () => {
         });
       });
     });
+
     test('Has correct element point after merge from middle', async () => {
       const editor = createTestEditor();
       const domElement = document.createElement('div');
@@ -1023,6 +1032,7 @@ describe('LexicalSelectionHelpers tests', () => {
         );
       });
     });
+
     test('Has correct element point after merge from end', async () => {
       const editor = createTestEditor();
       const domElement = document.createElement('div');
@@ -1238,6 +1248,7 @@ describe('LexicalSelectionHelpers tests', () => {
         });
       });
     });
+
     test('Can handle multiple element points', () => {
       const setupTestCase = (cb) => {
         const editor = createTestEditor();
@@ -1382,6 +1393,7 @@ describe('LexicalSelectionHelpers tests', () => {
         });
       });
     });
+
     test('Can handle a mix of text and element points', () => {
       const setupTestCase = (cb) => {
         const editor = createTestEditor();
@@ -1536,6 +1548,7 @@ describe('LexicalSelectionHelpers tests', () => {
       });
     });
   });
+
   test('range with multiple paragraphs', async () => {
     const editor = createTestEditor();
     const element = document.createElement('div');
@@ -1589,6 +1602,7 @@ describe('LexicalSelectionHelpers tests', () => {
       expect(selectedNodes2.nodeMap[5][1].__text).toBe('Thir');
     });
   });
+
   test('range with excludeFromCopy nodes', async () => {
     const editor = createTestEditor();
     const element = document.createElement('div');
@@ -1680,6 +1694,7 @@ describe('LexicalSelectionHelpers tests', () => {
           '<p dir="ltr"><span data-lexical-text="true">foo</span></p>',
         );
       });
+
       test('two text nodes', async () => {
         const editor = createTestEditor();
         const element = document.createElement('div');
@@ -1708,6 +1723,7 @@ describe('LexicalSelectionHelpers tests', () => {
           '<p dir="ltr"><span data-lexical-text="true">foobar</span></p>',
         );
       });
+
       test('link insertion without parent element', async () => {
         const editor = createTestEditor();
         const element = document.createElement('div');
@@ -1739,6 +1755,7 @@ describe('LexicalSelectionHelpers tests', () => {
           '<p dir="ltr"><span data-lexical-text="true">h</span><a href="https://" dir="ltr"><span data-lexical-text="true">ello worl</span></a><span data-lexical-text="true">d</span></p>',
         );
       });
+
       test('a single heading node with a child text node', async () => {
         const editor = createTestEditor();
         const element = document.createElement('div');
@@ -1767,6 +1784,7 @@ describe('LexicalSelectionHelpers tests', () => {
           '<h1 dir="ltr"><span data-lexical-text="true">foo</span></h1>',
         );
       });
+
       test('a heading node with a child text node and a disjoint sibling text node should throw', async () => {
         const editor = createTestEditor();
         const element = document.createElement('div');
@@ -1826,6 +1844,7 @@ describe('LexicalSelectionHelpers tests', () => {
           '<p dir="ltr"><span data-lexical-text="true">Existing text...foo</span></p>',
         );
       });
+
       test('two text nodes', async () => {
         const editor = createTestEditor();
         const element = document.createElement('div');
@@ -1856,6 +1875,7 @@ describe('LexicalSelectionHelpers tests', () => {
           '<p dir="ltr"><span data-lexical-text="true">Existing text...foobar</span></p>',
         );
       });
+
       test('a single heading node with a child text node', async () => {
         const editor = createTestEditor();
         const element = document.createElement('div');
@@ -1886,6 +1906,7 @@ describe('LexicalSelectionHelpers tests', () => {
           '<p dir="ltr"><span data-lexical-text="true">Existing text...foo</span></p>',
         );
       });
+
       test('a heading node with a child text node and a disjoint sibling text node should throw', async () => {
         const editor = createTestEditor();
         const element = document.createElement('div');
@@ -1926,6 +1947,7 @@ describe('extract', () => {
     const editor = createTestEditor();
     const element = document.createElement('div');
     editor.setRootElement(element);
+
     await editor.update(() => {
       const root = $getRoot();
       const paragraph = $createParagraphNode();

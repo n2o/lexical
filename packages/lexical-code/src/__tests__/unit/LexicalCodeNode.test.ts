@@ -24,9 +24,11 @@ const editorConfig = Object.freeze({
 });
 
 describe('LexicalCodeNode tests', () => {
-  initializeUnitTest((testEnv) => {
+  initializeUnit;
+  test((testEnv) => {
     test('CodeNode.constructor', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const codeNode = $createCodeNode();
         expect(codeNode.getType()).toBe('code');
@@ -37,6 +39,7 @@ describe('LexicalCodeNode tests', () => {
 
     test('CodeNode.createDOM()', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const codeNode = $createCodeNode();
         expect(codeNode.createDOM(editorConfig).outerHTML).toBe(
@@ -53,6 +56,7 @@ describe('LexicalCodeNode tests', () => {
 
     test('CodeNode.updateDOM()', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const newCodeNode = $createCodeNode();
         const codeNode = $createCodeNode();
@@ -69,6 +73,7 @@ describe('LexicalCodeNode tests', () => {
 
     test.skip('CodeNode.insertNewAfter()', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const root = $getRoot();
         const paragraphNode = $createParagraphNode();
@@ -89,6 +94,7 @@ describe('LexicalCodeNode tests', () => {
       expect(testEnv.outerHTML).toBe(
         '<div contenteditable="true" style="user-select: text; white-space: pre-wrap; word-break: break-word;" data-lexical-editor="true"><p dir="ltr"><span>foo</span></p></div>',
       );
+
       await editor.update(() => {
         const codeNode = $createCodeNode();
         const selection = $getSelection();
@@ -101,6 +107,7 @@ describe('LexicalCodeNode tests', () => {
 
     test('$createCodeNode()', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const codeNode = $createCodeNode();
         const createdCodeNode = $createCodeNode();

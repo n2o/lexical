@@ -18,9 +18,11 @@ const editorConfig = Object.freeze({
 });
 
 describe('LexicalQuoteNode tests', () => {
-  initializeUnitTest((testEnv) => {
+  initializeUnit;
+  test((testEnv) => {
     test('QuoteNode.constructor', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const quoteNode = $createQuoteNode();
         expect(quoteNode.getType()).toBe('quote');
@@ -31,6 +33,7 @@ describe('LexicalQuoteNode tests', () => {
 
     test('QuoteNode.createDOM()', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const quoteNode = $createQuoteNode();
         expect(quoteNode.createDOM(editorConfig).outerHTML).toBe(
@@ -47,6 +50,7 @@ describe('LexicalQuoteNode tests', () => {
 
     test('QuoteNode.updateDOM()', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const quoteNode = $createQuoteNode();
         const domElement = quoteNode.createDOM(editorConfig);
@@ -65,6 +69,7 @@ describe('LexicalQuoteNode tests', () => {
     test('QuoteNode.insertNewAfter()', async () => {
       const {editor} = testEnv;
       let quoteNode;
+
       await editor.update(() => {
         const root = $getRoot();
         quoteNode = $createQuoteNode();
@@ -73,6 +78,7 @@ describe('LexicalQuoteNode tests', () => {
       expect(testEnv.outerHTML).toBe(
         '<div contenteditable="true" style="user-select: text; white-space: pre-wrap; word-break: break-word;" data-lexical-editor="true"><blockquote><br></blockquote></div>',
       );
+
       await editor.update(() => {
         const result = quoteNode.insertNewAfter();
         expect(result).toBeInstanceOf(ParagraphNode);
@@ -85,6 +91,7 @@ describe('LexicalQuoteNode tests', () => {
 
     test('QuoteNode.canInsertTab()', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const quoteNode = $createQuoteNode();
         expect(quoteNode.canInsertTab()).toBe(false);
@@ -93,6 +100,7 @@ describe('LexicalQuoteNode tests', () => {
 
     test('$createQuoteNode()', async () => {
       const {editor} = testEnv;
+
       await editor.update(() => {
         const quoteNode = $createQuoteNode();
         const createdQuoteNode = $createQuoteNode();

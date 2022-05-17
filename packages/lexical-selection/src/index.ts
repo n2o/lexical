@@ -9,6 +9,7 @@ import type {
   RangeSelection,
   TextNode,
 } from 'lexical';
+
 import {
   $getDecoratorNode,
   $getPreviousSelection,
@@ -22,7 +23,9 @@ import {
   $setSelection,
 } from 'lexical';
 import invariant from 'shared/invariant';
+
 const cssToStyles: Map<string, Record<string, string>> = new Map();
+
 export function $cloneWithProperties<T extends LexicalNode>(node: T): T {
   const latest = node.getLatest();
   const constructor = latest.constructor;
@@ -414,7 +417,7 @@ export function $patchStyleText(
 export function $getSelectionStyleValueForProperty(
   selection: RangeSelection,
   styleProperty: string,
-  defaultValue: string = '',
+  defaultValue = '',
 ): string {
   let styleValue = null;
   const nodes = selection.getNodes();
